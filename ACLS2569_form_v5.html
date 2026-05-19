@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ลงทะเบียนอบรม ACLS 2569 — รพ.สรรพสิทธิประสงค์</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green:   #0F6E56;
+    --green-l: #E1F5EE;
+    --green-m: #1D9E75;
+    --red:     #A32D2D;
+    --red-l:   #FCEBEB;
+    --amber:   #854F0B;
+    --amber-l: #FAEEDA;
+    --gray:    #444441;
+    --gray-l:  #F1EFE8;
+    --gray-m:  #888780;
+    --border:  #D3D1C7;
+    --white:   #FFFFFF;
+    --text:    #2C2C2A;
+    --text-s:  #5F5E5A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'IBM Plex Sans Thai', 'Sarabun', sans-serif;
+    background: #F6F5F0;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 4rem;
+  }
+
+  /* ── header ── */
+  .page-header {
+    background: var(--green);
+    padding: 2rem 1.5rem 1.75rem;
+    text-align: center;
+  }
+  .page-header .sub {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    color: #9FE1CB;
+    text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+  .page-header h1 {
+    font-size: clamp(18px, 4vw, 24px);
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.4;
+  }
+  .page-header .meta {
+    margin-top: .6rem;
+    font-size: 13px;
+    color: #9FE1CB;
+  }
+
+  /* ── progress bar ── */
+  .progress-wrap {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: .75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .progress-label { font-size: 12px; color: var(--text-s); white-space: nowrap; }
+  .progress-bar-outer {
+    flex: 1;
+    height: 6px;
+    background: var(--gray-l);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-bar-inner {
+    height: 100%;
+    background: var(--green-m);
+    border-radius: 3px;
+    width: 0%;
+    transition: width .4s ease;
+  }
+
+  /* ── card ── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-width: 620px;
+    margin: 1.5rem auto 0;
+    width: calc(100% - 2rem);
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    border-left: 3px solid var(--green-m);
+    padding-left: .6rem;
+    margin-bottom: 1.1rem;
+  }
+
+  /* ── form fields ── */
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-s);
+  }
+  label .req { color: var(--red); margin-left: 2px; }
+
+  input[type=text],
+  input[type=tel],
+  input[type=email],
+  select {
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    width: 100%;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888780' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+  input:focus, select:focus {
+    border-color: var(--green-m);
+    box-shadow: 0 0 0 3px rgba(29,158,117,.12);
+  }
+  input.error, select.error {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(163,45,45,.1);
+  }
+  .err-msg {
+    font-size: 11px;
+    color: var(--red);
+    display: none;
+  }
+  .err-msg.show { display: block; }
+
+  select:disabled { background: var(--gray-l); color: var(--gray-m); cursor: not-allowed; }
+
+  /* ── prefix+name row ── */
+  .name-row { display: grid; grid-template-columns: 120px 1fr; gap: .6rem; }
+
+  /* ── submit ── */
+  .submit-wrap {
+    max-width: 620px;
+    margin: 1.25rem auto 0;
+    width: calc(100% - 2rem);
+  }
+  button[type=submit] {
+    width: 100%;
+    background: var(--green);
+    color: #fff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    cursor: pointer;
+    letter-spacing: .03em;
+    transition: background .2s, transform .1s;
+  }
+  button[type=submit]:hover { background: var(--green-m); }
+  button[type=submit]:active { transform: scale(.98); }
+  button[type=submit]:disabled { background: var(--gray-m); cursor: not-allowed; }
+
+  /* ── alert ── */
+  .alert {
+    max-width: 620px;
+    margin: 1rem auto 0;
+    width: calc(100% - 2rem);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    display: none;
+    line-height: 1.6;
+  }
+  .alert.success { background: var(--green-l); color: var(--green); border: 1px solid #9FE1CB; display: block; }
+  .alert.error   { background: var(--red-l);   color: var(--red);   border: 1px solid #F7C1C1; display: block; }
+  .alert.warning { background: var(--amber-l); color: var(--amber); border: 1px solid #FAC775; display: block; }
+
+  /* ── note ── */
+  .note {
+    max-width: 620px;
+    margin: .75rem auto 0;
+    width: calc(100% - 2rem);
+    font-size: 11.5px;
+    color: var(--gray-m);
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    .field-grid { grid-template-columns: 1fr; }
+    .field.full { grid-column: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="sub">โรงพยาบาลสรรพสิทธิประสงค์ · กลุ่มภารกิจด้านการพยาบาล</div>
+  <h1>ลงทะเบียนอบรม ACLS Provider Course<br>ประจำปีงบประมาณ 2569</h1>
+  <div class="meta">วันที่ 13–14 มิถุนายน 2569 &nbsp;|&nbsp; จำนวน 32 คน</div>
+</div>
+
+<div class="progress-wrap" id="progressWrap" style="display:none">
+  <span class="progress-label" id="progressLabel">0 / 32</span>
+  <div class="progress-bar-outer">
+    <div class="progress-bar-inner" id="progressBar"></div>
+  </div>
+</div>
+
+<div id="mainAlert" class="alert"></div>
+
+<form id="regForm" novalidate>
+
+  <!-- ส่วนที่ 1: กลุ่มงาน / หน่วยงาน -->
+  <div class="card">
+    <div class="card-title">กลุ่มงาน และหน่วยงาน</div>
+    <div class="field-grid">
+      <div class="field full">
+        <label for="dept">กลุ่มงาน <span class="req">*</span></label>
+        <select id="dept" name="dept">
+          <option value="">-- เลือกกลุ่มงาน --</option>
+        </select>
+        <span class="err-msg" id="err-dept">กรุณาเลือกกลุ่มงาน</span>
+      </div>
+      <div class="field full">
+        <label for="ward">หน่วยงาน / หอผู้ป่วย <span class="req">*</span></label>
+        <select id="ward" name="ward" disabled>
+          <option value="">-- เลือกกลุ่มงานก่อน --</option>
+        </select>
+        <span class="err-msg" id="err-ward">กรุณาเลือกหน่วยงาน</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ส่วนที่ 2: ข้อมูลส่วนตัว (ภาษาไทย) -->
+  <div class="card">
+    <div class="card-title">ข้อมูลส่วนตัว (ภาษาไทย)</div>
+    <div class="field-grid">
+      <div class="field full">
+        <label>ชื่อ–นามสกุล (ภาษาไทย) <span class="req">*</span></label>
+        <div class="name-row">
+          <select id="prefixTh" name="prefixTh">
+            <option value="นาง">นาง</option>
+            <option value="นางสาว">นางสาว</option>
+            <option value="นาย">นาย</option>
+          </select>
+          <input type="text" id="fnameTh" name="fnameTh" placeholder="ชื่อจริง">
+        </div>
+        <span class="err-msg" id="err-fnameTh">กรุณากรอกชื่อ</span>
+      </div>
+      <div class="field full">
+        <label for="lnameTh">นามสกุล (ภาษาไทย) <span class="req">*</span></label>
+        <input type="text" id="lnameTh" name="lnameTh" placeholder="นามสกุล">
+        <span class="err-msg" id="err-lnameTh">กรุณากรอกนามสกุล</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ส่วนที่ 3: ข้อมูลส่วนตัว (ภาษาอังกฤษ) -->
+  <div class="card">
+    <div class="card-title">ข้อมูลส่วนตัว (English)</div>
+    <div class="field-grid">
+      <div class="field full">
+        <label>First Name (English)</label>
+        <div class="name-row">
+          <select id="prefixEn" name="prefixEn">
+            <option value="Mrs.">Mrs.</option>
+            <option value="Miss">Miss</option>
+            <option value="Mr.">Mr.</option>
+          </select>
+          <input type="text" id="fnameEn" name="fnameEn" placeholder="First name">
+        </div>
+      </div>
+      <div class="field full">
+        <label for="lnameEn">Last Name (English)</label>
+        <input type="text" id="lnameEn" name="lnameEn" placeholder="Last name">
+      </div>
+    </div>
+  </div>
+
+  <!-- ส่วนที่ 4: ข้อมูลติดต่อ -->
+  <div class="card">
+    <div class="card-title">ข้อมูลประจำตัวและการติดต่อ</div>
+    <div class="field-grid">
+      <div class="field full">
+        <label for="cid">เลขบัตรประชาชน 13 หลัก <span class="req">*</span></label>
+        <input type="text" id="cid" name="cid" placeholder="x-xxxx-xxxxx-xx-x" maxlength="13" inputmode="numeric">
+        <span class="err-msg" id="err-cid">กรุณากรอกเลขบัตรประชาชน 13 หลัก (ตัวเลขเท่านั้น)</span>
+      </div>
+      <div class="field">
+        <label for="tel">โทรศัพท์ <span class="req">*</span></label>
+        <input type="tel" id="tel" name="tel" placeholder="0xxxxxxxxx" maxlength="10" inputmode="numeric">
+        <span class="err-msg" id="err-tel">กรุณากรอกเบอร์โทรศัพท์</span>
+      </div>
+      <div class="field">
+        <label for="email">อีเมล <span class="req">*</span></label>
+        <input type="email" id="email" name="email" placeholder="name@email.com">
+        <span class="err-msg" id="err-email">กรุณากรอกอีเมลให้ถูกต้อง</span>
+      </div>
+      <div class="field full">
+        <label for="license">เลขใบประกอบวิชาชีพการพยาบาล <span class="req">*</span></label>
+        <input type="text" id="license" name="license" placeholder="xxxxxx" inputmode="numeric">
+        <span class="err-msg" id="err-license">กรุณากรอกเลขใบประกอบวิชาชีพ</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-wrap">
+    <button type="submit" id="submitBtn">ส่งข้อมูลลงทะเบียน</button>
+  </div>
+  <p class="note">ข้อมูลจะถูกบันทึกลง Google Sheets ของหน่วยงาน · กรุณาตรวจสอบข้อมูลก่อนส่ง</p>
+
+</form>
+
+<script>
+// ============================================================
+//  ⚙️  ตั้งค่า: วาง URL ของ Google Apps Script Web App ที่นี่
+//  (ดูขั้นตอนสร้าง Web App ในไฟล์ README)
+// ============================================================
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZyEdSU8sTY-SvMYuHa_IQIidSPOI8T6FQkbD8bwGfFt5hy9yZEKiZ5J57xkZ0ibcmfg/exec";
+
+// ============================================================
+//  ข้อมูลกลุ่มงานและหน่วยงาน (เฉพาะกลุ่มที่มีโควต้า > 0)
+// ============================================================
+const DEPT_WARDS = {
+  "กลุ่มงานการพยาบาลผู้ป่วยอายุรกรรมสาย 1": {
+    quota: 3,
+    wards: ["หอผู้ป่วยอายุรกรรมชาย ชั้น 4","หอผู้ป่วยอายุรกรรมชาย ชั้น 5","หอผู้ป่วยอายุรกรรมชาย ชั้น 6","ห้องผู้ป่วยหนักอายุรกรรม 2 ทิศเหนือ","ห้องผู้ป่วยหนักอายุรกรรม 3 ทิศใต้"]
+  },
+  "กลุ่มงานการพยาบาลผู้ป่วยอายุรกรรมสาย 2": {
+    quota: 3,
+    wards: ["ห้องผู้ป่วยหนักอายุรกรรม 2 ทิศใต้","ห้องผู้ป่วยหนักโรคหลอดเลือดสมอง","ห้องผู้ป่วยหนักพระตาพระวอ","หอผู้ป่วยอายุรกรรมหญิง ชั้น 4","หอผู้ป่วยอายุรกรรมหญิง ชั้น 5","หอผู้ป่วยอายุรกรรมหญิง ชั้น 6"]
+  },
+  "กลุ่มงานการพยาบาลผู้ป่วยอายุรกรรมสาย 3": {
+    quota: 1,
+    wards: ["หอผู้ป่วยพิเศษพระปทุมวรราชสุริยวงศ์ 5","หอผู้ป่วยพิเศษอายุรกรรม","หอผู้ป่วยอายุรกรรมโรคเลือด","หอผู้ป่วยเคมีบำบัด"]
+  },
+  "กลุ่มงานการพยาบาลผู้ป่วยหนักอายุรกรรม": {
+    quota: 3,
+    wards: ["ห้องผู้ป่วยหนักอายุรกรรม 1 ทิศใต้","ห้องผู้ป่วยหนักอายุรกรรม 1 ทิศเหนือ","ห้องผู้ป่วยหนักหัวใจและหลอดเลือด 1","ห้องผู้ป่วยหนักหัวใจและหลอดเลือด 2","หอผู้ป่วยโรคหัวใจและหลอดเลือด"]
+  },
+  "กลุ่มงานการพยาบาลตรวจรักษาพิเศษ": {
+    quota: 1,
+    wards: ["ห้องตรวจพิเศษศูนย์โรคหัวใจ","ศูนย์ไตเทียมสรรพสิทธิ์","ห้องส่องกล้องอายุรกรรม","หน่วยให้ยาเคมีบำบัด","ศูนย์รังสีร่วมรักษา"]
+  },
+  "กลุ่มงานการพยาบาลผู้ป่วยศัลยกรรมทั่วไป": {
+    quota: 4,
+    wards: ["ห้องผู้ป่วยหนักศัลยกรรม 1","ห้องผู้ป่วยหนักศัลยกรรม 2","ห้องผู้ป่วยหนักศัลยกรรม 3","หอผู้ป่วยศัลยกรรมทั่วไป 1","หอผู้ป่วยศัลยกรรมทั่วไป 2","หอผู้ป่วยศัลยกรรมทั่วไป 3","หอผู้ป่วยศัลยกรรมทั่วไป 4"]
+  },
+  "กลุ่มงานการพยาบาลผู้ป่วยศัลยกรรมอุบัติเหตุ": {
+    quota: 3,
+    wards: ["หอผู้ป่วยศัลยกรรมอุบัติเหตุ","ห้องผู้ป่วยหนักบาดแผลไฟไหม้น้ำร้อนลวก","ห้องผู้ป่วยหนักหลวงปู่ชา","ห้องผู้ป่วยหนักศัลยกรรมอุบัติเหตุ 1","ห้องผู้ป่วยหนักศัลยกรรมอุบัติเหตุ 2"]
+  },
+  "กลุ่มงานการพยาบาลผู้ป่วยศัลยกรรมประสาท": {
+    quota: 3,
+    wards: ["ห้องผู้ป่วยหนักศัลยกรรมประสาท 1","ห้องผู้ป่วยหนักศัลยกรรมประสาท 2","ห้องผู้ป่วยหนักศัลยกรรมประสาท 3","หอผู้ป่วยศัลยกรรมประสาทหญิง","หอผู้ป่วยศัลยกรรมประสาทชาย"]
+  },
+  "กลุ่มงานการพยาบาลผู้ป่วยศัลยกรรมเฉพาะทาง": {
+    quota: 2,
+    wards: ["หอผู้ป่วยศัลยกรรมระบบปัสสาวะ","หอผู้ป่วยพิเศษศัลยกรรม","หอผู้ป่วยพิเศษวิชิต","หอผู้ป่วยศัลยกรรมตกแต่ง","หอผู้ป่วยศัลยกรรมเด็ก","หอผู้ป่วยหลวงปู่ชา"]
+  },
+  "กลุ่มงานการพยาบาลผู้ป่วยศัลยกรรมหัวใจหลอดเลือดและทรวงอก": {
+    quota: 2,
+    wards: ["ห้องผู้ป่วยหนักศัลยกรรมหัวใจและทรวงอก 1","ห้องผู้ป่วยหนักศัลยกรรมหัวใจและทรวงอก 2","หอผู้ป่วยศัลยกรรมหัวใจและทรวงอก","หอผู้ป่วยศัลยกรรมทรวงอกและหลอดเลือด"]
+  },
+  "กลุ่มงานการพยาบาลการรับบริจาคปลูกถ่ายอวัยวะและเนื้อเยื่อ": {
+    quota: 1,
+    wards: ["ICU BMT","ICU Organ Transplant"]
+  },
+  "กลุ่มงานการพยาบาลผู้ป่วยออร์โธปิดิกส์": {
+    quota: 1,
+    wards: ["หอผู้ป่วยพิเศษพระปทุมวรราชสุริยวงศ์ 1","ห้องผู้ป่วยหนักออร์โธปิดิกส์และอุบัติเหตุ","หอผู้ป่วยศัลยกรรมกระดูกชาย 1","หอผู้ป่วยศัลยกรรมกระดูกชาย 2","หอผู้ป่วยศัลยกรรมกระดูกหญิง","หอผู้ป่วยบาดเจ็บไขสันหลัง"]
+  },
+  "กลุ่มงานการพยาบาลผู้ป่วยวิสัญญี": {
+    quota: 2,
+    wards: ["งานวิสัญญีพยาธิฯ ชั้น 3","งานวิสัญญีพยาธิฯ ชั้น 4","งานวิสัญญีพยาธิฯ ชั้น 5","งานวิสัญญีพยาธิฯ ชั้น 6","งานวิสัญญี Excellence ชั้น 4","งานวิสัญญี Excellence ชั้น 6"]
+  },
+  "กลุ่มงานการพยาบาลผู้ป่วยอุบัติเหตุและฉุกเฉิน": {
+    quota: 2,
+    wards: ["งานผู้ป่วยอุบัติเหตุและฉุกเฉิน","Refer","ศูนย์ดูแลผู้ป่วยก่อนถึงโรงพยาบาล","ศูนย์เคลื่อนย้ายผู้ป่วย","SCH-ER"]
+  },
+  "กลุ่มงานการพยาบาลผู้คลอด": {
+    quota: 1,
+    wards: ["ห้องคลอด","หน่วยฝากครรภ์"]
+  }
+};
+
+const TOTAL_QUOTA = 32;
+
+// ── populate dept dropdown ──
+const deptSel = document.getElementById("dept");
+Object.keys(DEPT_WARDS).forEach(name => {
+  const opt = document.createElement("option");
+  opt.value = name;
+  opt.textContent = name.replace("กลุ่มงานการพยาบาล","");
+  deptSel.appendChild(opt);
+});
+
+// ── dependent ward dropdown ──
+deptSel.addEventListener("change", () => {
+  const wardSel = document.getElementById("ward");
+  wardSel.innerHTML = "";
+  const key = deptSel.value;
+  if (!key) {
+    wardSel.innerHTML = '<option value="">-- เลือกกลุ่มงานก่อน --</option>';
+    wardSel.disabled = true;
+    return;
+  }
+  wardSel.disabled = false;
+  const def = document.createElement("option");
+  def.value = ""; def.textContent = "-- เลือกหน่วยงาน --";
+  wardSel.appendChild(def);
+  DEPT_WARDS[key].wards.forEach(w => {
+    const o = document.createElement("option");
+    o.value = w; o.textContent = w;
+    wardSel.appendChild(o);
+  });
+});
+
+// ── validation helpers ──
+function setErr(id, show) {
+  const el = document.getElementById(id);
+  const inp = document.getElementById(id.replace("err-",""));
+  el.classList.toggle("show", show);
+  if (inp) inp.classList.toggle("error", show);
+  return show;
+}
+
+function validate() {
+  let ok = true;
+  if (!document.getElementById("dept").value)    { setErr("err-dept", true);    ok = false; } else setErr("err-dept", false);
+  if (!document.getElementById("ward").value)    { setErr("err-ward", true);    ok = false; } else setErr("err-ward", false);
+  if (!document.getElementById("fnameTh").value.trim()) { setErr("err-fnameTh", true); ok = false; } else setErr("err-fnameTh", false);
+  if (!document.getElementById("lnameTh").value.trim()) { setErr("err-lnameTh", true); ok = false; } else setErr("err-lnameTh", false);
+  const cid = document.getElementById("cid").value.trim();
+  if (!cid || !/^\d{13}$/.test(cid)) { setErr("err-cid", true); ok = false; } else setErr("err-cid", false);
+  if (!document.getElementById("tel").value.trim())     { setErr("err-tel", true);     ok = false; } else setErr("err-tel", false);
+  const email = document.getElementById("email").value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErr("err-email", true); ok = false; } else setErr("err-email", false);
+  if (!document.getElementById("license").value.trim())    { setErr("err-license", true); ok = false; } else setErr("err-license", false);
+  return ok;
+}
+
+// ── submit ──
+document.getElementById("regForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!validate()) {
+    showAlert("warning", "กรุณาตรวจสอบข้อมูลที่แสดงสีแดงให้ครบถ้วน");
+    return;
+  }
+
+  const btn = document.getElementById("submitBtn");
+  btn.disabled = true;
+  btn.textContent = "กำลังส่งข้อมูล...";
+  hideAlert();
+
+  const payload = {
+    timestamp:  new Date().toLocaleString("th-TH"),
+    dept:       document.getElementById("dept").value,
+    ward:       document.getElementById("ward").value,
+    prefixTh:   document.getElementById("prefixTh").value,
+    fnameTh:    document.getElementById("fnameTh").value.trim(),
+    lnameTh:    document.getElementById("lnameTh").value.trim(),
+    prefixEn:   document.getElementById("prefixEn").value,
+    fnameEn:    document.getElementById("fnameEn").value.trim(),
+    lnameEn:    document.getElementById("lnameEn").value.trim(),
+    cid:        document.getElementById("cid").value.trim(),
+    tel:        document.getElementById("tel").value.trim(),
+    email:      document.getElementById("email").value.trim(),
+    license:    document.getElementById("license").value.trim(),
+  };
+
+  // ตรวจ URL ก่อน: ถ้ายังไม่ได้ตั้งค่า แจ้งเตือน
+  if (APPS_SCRIPT_URL.includes("YOUR_DEPLOYMENT_ID")) {
+    showAlert("warning",
+      "⚠️ ยังไม่ได้ตั้งค่า Google Apps Script URL<br>" +
+      "กรุณาวาง Web App URL ใน APPS_SCRIPT_URL ในโค้ด (บรรทัดที่ 2 ของ &lt;script&gt;)<br>" +
+      "<small>ข้อมูลที่กรอก: " + payload.prefixTh + payload.fnameTh + " " + payload.lnameTh + " · " + payload.dept.replace("กลุ่มงานการพยาบาล","") + "</small>"
+    );
+    btn.disabled = false;
+    btn.textContent = "ส่งข้อมูลลงทะเบียน";
+    return;
+  }
+
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    // no-cors จะไม่ return body — ถือว่าสำเร็จถ้าไม่ throw
+    showAlert("success",
+      "✅ ลงทะเบียนเรียบร้อยแล้ว<br>" +
+      "<strong>" + payload.prefixTh + payload.fnameTh + " " + payload.lnameTh + "</strong><br>" +
+      "<small>" + payload.dept.replace("กลุ่มงานการพยาบาล","") + " · " + payload.ward + "</small>"
+    );
+    document.getElementById("regForm").reset();
+    document.getElementById("ward").innerHTML = '<option value="">-- เลือกกลุ่มงานก่อน --</option>';
+    document.getElementById("ward").disabled = true;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } catch(err) {
+    showAlert("error", "เกิดข้อผิดพลาด: " + err.message + "<br>กรุณาลองใหม่อีกครั้ง");
+  }
+
+  btn.disabled = false;
+  btn.textContent = "ส่งข้อมูลลงทะเบียน";
+});
+
+function showAlert(type, html) {
+  const el = document.getElementById("mainAlert");
+  el.className = "alert " + type;
+  el.innerHTML = html;
+  el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+function hideAlert() {
+  const el = document.getElementById("mainAlert");
+  el.className = "alert";
+  el.innerHTML = "";
+}
+</script>
+</body>
+</html>
